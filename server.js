@@ -7,7 +7,7 @@ const app = express();
 // 環境変数から設定を読み込む (または直接記述)
 const channelSecret = process.env.LINE_CHANNEL_SECRET;
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-const richMenuId = process.env.LINE_RICH_MENU_ID; // リッチメニューIDを設定
+
 
 if (!channelSecret) {
     console.error('LINE_CHANNEL_SECRETが設定されていません');
@@ -18,10 +18,7 @@ if (!channelAccessToken) {
     console.error('LINE_CHANNEL_ACCESS_TOKENが設定されていません');
     process.exit(1);
 }
-if (!richMenuId) {
-    console.error('LINE_RICH_MENU_IDが設定されていません');
-    process.exit(1);
-}
+
 
 
 const client = new Client({
@@ -156,22 +153,7 @@ async function handleEvent(event) {
                     text: '時間の形式が正しくありません。「時間設定 HH:MM」のように入力してください (例: 時間設定 9:00)。'
                 });
             }
-        } else if (message === 'リッチメニュー表示') { // リッチメニューを表示させるコマンド (テスト用)
-            return client.replyMessage(event.replyToken, {
-                type: 'text',
-                text: 'リッチメニューを表示します',
-            }).then(() => {
-                return client.linkRichMenuToUser(userId, richMenuId);
-            });
-        } else if (message === 'リッチメニュー非表示') { // リッチメニューを非表示にするコマンド (テスト用)
-            return client.replyMessage(event.replyToken, {
-                type: 'text',
-                text: 'リッチメニューを非表示にします',
-            }).then(() => {
-                return client.unlinkRichMenuFromUser(userId);
-            });
-        }
-         else {
+        }else {
             return client.replyMessage(event.replyToken, {
                 type: 'text',
                 text: '「時間設定 HH:MM」で薬を飲む時間を設定してください。\n例: 時間設定 9:00\nリッチメニューを表示するには「リッチメニュー表示」と送信してください。'
